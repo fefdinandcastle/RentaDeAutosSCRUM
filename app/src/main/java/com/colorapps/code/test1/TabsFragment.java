@@ -39,7 +39,7 @@ import com.colorapps.code.test1.Model.Song;
 import java.util.ArrayList;
 
 public class TabsFragment extends AppCompatActivity implements SongsFragment.OnFragmentInteractionListener,AlbumsFragment.OnFragmentInteractionListener,ArtistsFragment.OnFragmentInteractionListener {
-
+    
     private static final int MY_PERMISSION_REQUEST=1;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
