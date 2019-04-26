@@ -4,25 +4,23 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -38,72 +36,48 @@ import com.colorapps.code.test1.Model.Song;
 
 import java.util.ArrayList;
 
-public class TabsFragment extends AppCompatActivity implements SongsFragment.OnFragmentInteractionListener,AlbumsFragment.OnFragmentInteractionListener,ArtistsFragment.OnFragmentInteractionListener {
-    
+public class MainActivity extends AppCompatActivity implements BlankFragment.OnFragmentInteractionListener,SongsFragment.OnFragmentInteractionListener,AlbumsFragment.OnFragmentInteractionListener,ArtistsFragment.OnFragmentInteractionListener{
+
     private static final int MY_PERMISSION_REQUEST=1;
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
     public static ArrayList<Song> songs;
     public static ArrayList<Album> albums;
-    private boolean isChecked = false;
+    FragmentManager fragmentManager;
+    FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if(AppCompatDelegate.getDefaultNightMode()==AppCompatDelegate.MODE_NIGHT_YES){
             setTheme(R.style.NightMode);
-        }
-        else setTheme(R.style.AppTheme);
+        }else setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        fragmentManager=getSupportFragmentManager();
         songs =new ArrayList<Song>();
         albums=new ArrayList<Album>();
         requestPermission();
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        setFragment(new BlankFragment());
+    }
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container_tabs);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mViewPager.setCurrentItem(tab.getPosition());
-            }
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-        //tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
-
+    public void setFragment(Fragment fragment) {
+        android.support.v4.app.FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+        t.replace(R.id.main_fragment, fragment);
+        t.commit();
     }
 
     public void requestPermission(){
-        if(ContextCompat.checkSelfPermission(TabsFragment.this,Manifest.permission.READ_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(TabsFragment.this,Manifest.permission.READ_EXTERNAL_STORAGE)){
-                ActivityCompat.requestPermissions(TabsFragment.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},MY_PERMISSION_REQUEST);
+        if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.READ_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED){
+            if(ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,Manifest.permission.READ_EXTERNAL_STORAGE)){
+                ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},MY_PERMISSION_REQUEST);
             }
             else{
-                ActivityCompat.requestPermissions(TabsFragment.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},MY_PERMISSION_REQUEST);
+                ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},MY_PERMISSION_REQUEST);
             }
         }
         else{
             try {
-                MusicRetriever.loadAlbums(TabsFragment.this);
+                MusicRetriever.loadAlbums(MainActivity.this);
                 Toast.makeText(getApplicationContext(),"Hay: "+MusicRetriever.getAlbums().size()+" Canciones pedir permsio",Toast.LENGTH_SHORT ).show();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -111,16 +85,15 @@ public class TabsFragment extends AppCompatActivity implements SongsFragment.OnF
         }
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case MY_PERMISSION_REQUEST: {
                 if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    if(ContextCompat.checkSelfPermission(TabsFragment.this,Manifest.permission.READ_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED){
-                        Toast.makeText(TabsFragment.this,"Permiso concedido",Toast.LENGTH_SHORT).show();
+                    if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.READ_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED){
+                        Toast.makeText(MainActivity.this,"Permiso concedido",Toast.LENGTH_SHORT).show();
                         try {
-                            MusicRetriever.loadAlbums(TabsFragment.this);
+                            MusicRetriever.loadAlbums(MainActivity.this);
                             Toast.makeText(getApplicationContext(),"Hay: "+albums.size()+" Canciones despues permiso",Toast.LENGTH_SHORT ).show();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -128,7 +101,7 @@ public class TabsFragment extends AppCompatActivity implements SongsFragment.OnF
                     }
                 }
                 else{
-                    Toast.makeText(TabsFragment.this,"Permiso no concedido",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"Permiso no concedido",Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -158,9 +131,9 @@ public class TabsFragment extends AppCompatActivity implements SongsFragment.OnF
             }
 
             public void restartApp(){
-                Intent i=new Intent(getApplicationContext(),TabsFragment.class);
+                Intent i=new Intent(getApplicationContext(),MainActivity.class);
                 startActivity(i);
-                TabsFragment.this.finish();
+                MainActivity.this.finish();
             }
 
         });
@@ -185,10 +158,16 @@ public class TabsFragment extends AppCompatActivity implements SongsFragment.OnF
         }
     }
 
+    public void startFragment(){
+        Fragment fragment;
+        fragmentTransaction=fragmentManager.beginTransaction();
+    }
+
     @Override
     public void onFragmentInteraction(Uri uri) {
 
     }
+
 
     /**
      * A placeholder fragment containing a simple view.
@@ -200,15 +179,13 @@ public class TabsFragment extends AppCompatActivity implements SongsFragment.OnF
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
-        public PlaceholderFragment() {
-        }
 
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
+        public static MainActivity.PlaceholderFragment newInstance(int sectionNumber) {
+            MainActivity.PlaceholderFragment fragment = new MainActivity.PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
@@ -216,7 +193,7 @@ public class TabsFragment extends AppCompatActivity implements SongsFragment.OnF
         }
 
         public void restartApp(){
-            Intent i=new Intent(getContext(),TabsFragment.class);
+            Intent i=new Intent(getContext(),MainActivity.class);
             startActivity(i);
             getActivity().finish();
         }
@@ -245,7 +222,7 @@ public class TabsFragment extends AppCompatActivity implements SongsFragment.OnF
                 }
             });
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            textview2.setText(TabsFragment.songs.get(0).getTitle()+"");
+            textview2.setText(songs.get(0).getTitle()+"");
             return rootView;
         }
 
@@ -256,36 +233,5 @@ public class TabsFragment extends AppCompatActivity implements SongsFragment.OnF
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position){
-                case 0:
-                    AlbumsFragment albumsFragment = new AlbumsFragment();
-                    return albumsFragment;
-                case 1:
-                    SongsFragment songsFragment = new SongsFragment();
-                    return songsFragment;
-                case 2:
-                    ArtistsFragment artistsFragment = new ArtistsFragment();
-                    return artistsFragment;
-                default:
-                    return null;
-            }
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            //return PlaceholderFragment.newInstance(position + 1);
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
-    }
 }
