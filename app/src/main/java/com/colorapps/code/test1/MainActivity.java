@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -30,13 +29,14 @@ import android.widget.ToggleButton;
 import com.colorapps.code.test1.Fragments.AlbumsFragment;
 import com.colorapps.code.test1.Fragments.ArtistsFragment;
 import com.colorapps.code.test1.Fragments.SongsFragment;
+import com.colorapps.code.test1.Fragments.TabsFragment;
 import com.colorapps.code.test1.Helpers.MusicRetriever;
 import com.colorapps.code.test1.Model.Album;
 import com.colorapps.code.test1.Model.Song;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements BlankFragment.OnFragmentInteractionListener,SongsFragment.OnFragmentInteractionListener,AlbumsFragment.OnFragmentInteractionListener,ArtistsFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements TabsFragment.OnFragmentInteractionListener,SongsFragment.OnFragmentInteractionListener,AlbumsFragment.OnFragmentInteractionListener,ArtistsFragment.OnFragmentInteractionListener{
 
     private static final int MY_PERMISSION_REQUEST=1;
     public static ArrayList<Song> songs;
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements BlankFragment.OnF
         requestPermission();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setFragment(new BlankFragment());
+        setFragment(new TabsFragment());
     }
 
     public void setFragment(Fragment fragment) {
@@ -169,69 +169,6 @@ public class MainActivity extends AppCompatActivity implements BlankFragment.OnF
     }
 
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
 
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static MainActivity.PlaceholderFragment newInstance(int sectionNumber) {
-            MainActivity.PlaceholderFragment fragment = new MainActivity.PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public void restartApp(){
-            Intent i=new Intent(getContext(),MainActivity.class);
-            startActivity(i);
-            getActivity().finish();
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            TextView textview2=(TextView)rootView.findViewById(R.id.song);
-            Switch themeSwitch=rootView.findViewById(R.id.switch2);
-            if(AppCompatDelegate.getDefaultNightMode()==AppCompatDelegate.MODE_NIGHT_YES){
-                themeSwitch.setChecked(true);
-            }
-            themeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isChecked){
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                        restartApp();
-                    }
-                    else{
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                        restartApp();
-                    }
-                }
-            });
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            textview2.setText(songs.get(0).getTitle()+"");
-            return rootView;
-        }
-
-
-    }
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
 
 }

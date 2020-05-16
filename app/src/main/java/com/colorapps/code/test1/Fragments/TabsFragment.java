@@ -1,4 +1,4 @@
-package com.colorapps.code.test1;
+package com.colorapps.code.test1.Fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -12,23 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.colorapps.code.test1.Fragments.AlbumsFragment;
-import com.colorapps.code.test1.Fragments.ArtistsFragment;
-import com.colorapps.code.test1.Fragments.SongsFragment;
-import com.colorapps.code.test1.Model.Album;
-
-import java.util.ArrayList;
+import com.colorapps.code.test1.R;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link BlankFragment.OnFragmentInteractionListener} interface
+ * {@link TabsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link BlankFragment#newInstance} factory method to
+ * Use the {@link TabsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BlankFragment extends Fragment implements SongsFragment.OnFragmentInteractionListener,AlbumsFragment.OnFragmentInteractionListener,ArtistsFragment.OnFragmentInteractionListener  {
+public class TabsFragment extends Fragment implements SongsFragment.OnFragmentInteractionListener,AlbumsFragment.OnFragmentInteractionListener,ArtistsFragment.OnFragmentInteractionListener  {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -46,7 +41,7 @@ public class BlankFragment extends Fragment implements SongsFragment.OnFragmentI
 
     private OnFragmentInteractionListener mListener;
 
-    public BlankFragment() {
+    public TabsFragment() {
         // Required empty public constructor
     }
 
@@ -56,11 +51,11 @@ public class BlankFragment extends Fragment implements SongsFragment.OnFragmentI
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment BlankFragment.
+     * @return A new instance of fragment TabsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static BlankFragment newInstance(String param1, String param2) {
-        BlankFragment fragment = new BlankFragment();
+    public static TabsFragment newInstance(String param1, String param2) {
+        TabsFragment fragment = new TabsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
