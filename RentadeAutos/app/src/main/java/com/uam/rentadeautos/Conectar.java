@@ -1,46 +1,38 @@
 package com.uam.rentadeautos;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
+import android.os.StrictMode;
 import android.util.Log;
-import android.widget.Toast;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Connection;
+
 
 public class Conectar {
-    private Connection conexion = null;
-    private String servidor="192.168.0.10:3306";
-    private String database="renta_autos";
-    private String usuario="Luis";
-    private String password="Lossims4";
-    private String url="";
-
-    public Conectar(Context context){
+    String classs = "com.mysql.jdbc.Driver";
+    String url = "jdbc:mysql://192.168.0.10/renta_autos";
+    String un = "Luis";
+    String password = "Lossims4";
+    @SuppressLint("NewApi")
+    public Connection CONN() {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Connection conn = null;
+        String ConnURL = null;
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            url = "jdbc:mysql://"+servidor+"/"+database;
-            conexion = DriverManager.getConnection(url, usuario, password);
-            boolean bool = conexion==null;
-            //Toast.makeText(context,"Al inicio es null: "+bool,Toast.LENGTH_SHORT).show();
-        }catch (ClassNotFoundException | SQLException ex){
-            Log.d("xd",ex.getMessage());
+            Class.forName(classs);
+            conn = DriverManager.getConnection(url, un,password);
+            //conn = DriverManager.getConnection(ConnURL);
+        } catch (SQLException se) {
+            Log.e("ERRO", se.getMessage());
+        } catch (ClassNotFoundException e) {
+            Log.e("ERRO", e.getMessage());
+        } catch (Exception e) {
+            Log.e("ERRO", e.getMessage());
         }
-    }
-
-    public Connection getConexion(){
-        return conexion;
-    }
-
-    public Connection cerrarConexion(){
-        try {
-            conexion.close();
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-
-        conexion=null;
-        return conexion;
+        return conn;
     }
 }
+
 
